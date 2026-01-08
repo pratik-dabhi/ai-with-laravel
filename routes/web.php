@@ -1,14 +1,25 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TextGenerationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Home
+Route::get('/', fn() => view('welcome'))->name('home');
+
+// AI Text Generation Routes
+Route::prefix('ai')->name('ai.')->group(function () {
+    Route::post('text', [TextGenerationController::class, 'text'])->name('text');
+    Route::get('stream', [TextGenerationController::class, 'stream'])->name('stream');
+    Route::view('playground', 'ai.playground')->name('playground');
 });
 
-/* Text Generation */
-Route::post('/ai/text', [TextGenerationController::class, 'text']);
-Route::get('/ai/stream', [TextGenerationController::class, 'stream']);
-Route::view('/ai/playground', 'ai.playground');
-
+// Chat Resource Routes
+Route::prefix('chats')->name('chats.')->group(function () {
+    Route::get('/', [ChatController::class, 'index'])->name('index');
+    Route::post('/', [ChatController::class, 'store'])->name('store');
+    Route::get('{chat}', [ChatController::class, 'show'])->name('show');
+    Route::patch('{chat}', [ChatController::class, 'update'])->name('update');
+    Route::delete('{chat}', [ChatController::class, 'destroy'])->name('destroy');
+    Route::post('{chat}/messages', [ChatController::class, 'send'])->name('messages.store');
+});
