@@ -1,59 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel AI Integration
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A robust Laravel 12.x foundation integrated with modern AI capabilities, providing a template for building conversational interfaces, Model Context Protocol (MCP) servers, and various AI-powered features.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   **[Conversational AI / Text Generation](docs/chatbot.md)**: Native multi-turn chat interfaces with history management.
+-   **[Model Context Protocol (MCP)](docs/mcp.md)**: Built-in MCP server support to expose your application data securely to LLMs.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠 Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   **Framework**: Laravel 12.0+
+-   **AI Abstraction**: [Prism PHP](https://prism-php.com/)
+-   **Protocol**: [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) via [Laravel MCP](https://github.com/laravel/mcp)
+-   **Local LLM Runner**: [Ollama](https://ollama.com/) (default)
+-   **Frontend**: Vite, Tailwind CSS, and Vanilla JS
 
-## Learning Laravel
+## 📋 Pre-requisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Before setting up the project, ensure you have the following installed:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1.  **PHP**: ^8.2
+2.  **Composer**
+3.  **Node.js & NPM**
+4.  **Ollama**: [Download and install Ollama](https://ollama.com/download)
+5.  **Models**: Pull the required models for the default configuration:
+    ```bash
+    ollama pull mistral
+    ollama pull whisper
+    ```
 
-## Laravel Sponsors
+## ⚙️ Setup Instructions
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Follow these steps to get your project up and running:
 
-### Premium Partners
+### 1. Clone & Install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Run the built-in setup script which handles dependency installation, environment setup, and migrations:
 
-## Contributing
+```bash
+composer setup
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+This script will:
 
-## Code of Conduct
+-   Install Composer dependencies.
+-   Create a `.env` file (if not exists).
+-   Generate an application key.
+-   Run database migrations.
+-   Install NPM dependencies.
+-   Build frontend assets.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Configure Environment
 
-## Security Vulnerabilities
+Ensure your `.env` file reflects your AI provider configurations. By default, this project uses Ollama:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+# Example AI Configuration
+PRISM_OLLAMA_URL=http://localhost:11434
+```
 
-## License
+### 3. Start Development Server
+
+You can start all necessary services (Server, Queue, Vite, etc.) using the shortcut command:
+
+```bash
+composer dev
+```
+
+## 🔌 Model Context Protocol (MCP)
+
+This project includes a built-in MCP server at `/mcp/chats`. You can connect this to MCP-compatible clients (like Claude Desktop) to allow them to interact with your application's chat data.
+
+-   **MCP Endpoint**: `http://localhost:8000/mcp/chats`
+-   **Exposed Tools**: `list_chats`, `get_chat_messages`
+
+## 📄 License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
