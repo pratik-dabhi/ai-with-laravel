@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TextGenerationController;
+use App\Http\Controllers\ImageGenerationController;
 use Illuminate\Support\Facades\Route;
 
 // Home
@@ -12,6 +13,8 @@ Route::prefix('ai')->name('ai.')->group(function () {
     Route::post('text', [TextGenerationController::class, 'text'])->name('text');
     Route::get('stream', [TextGenerationController::class, 'stream'])->name('stream');
     Route::view('playground', 'ai.playground')->name('playground');
+    Route::post('image', [ImageGenerationController::class, 'generate'])->name('image.generate');
+    Route::get('image/status/{taskId}', [ImageGenerationController::class, 'status'])->name('image.status');
 });
 
 // Chat Resource Routes

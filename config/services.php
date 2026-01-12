@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'freepik' => [
+        'key' => env('FREEPIK_API_KEY'),
+    ],
+
 ];
