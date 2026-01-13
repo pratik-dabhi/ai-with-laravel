@@ -38,5 +38,9 @@ return [
     'freepik' => [
         'key' => env('FREEPIK_API_KEY'),
     ],
+    
+    'deepgram' => [
+        'key' => env('DEEPGRAM_API_KEY'),
+    ],
 
 ];

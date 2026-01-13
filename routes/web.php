@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TextGenerationController;
 use App\Http\Controllers\ImageGenerationController;
+use App\Http\Controllers\SpeechToTextController;
 use Illuminate\Support\Facades\Route;
 
 // Home
@@ -15,6 +16,8 @@ Route::prefix('ai')->name('ai.')->group(function () {
     Route::view('playground', 'ai.playground')->name('playground');
     Route::post('image', [ImageGenerationController::class, 'generate'])->name('image.generate');
     Route::get('image/status/{taskId}', [ImageGenerationController::class, 'status'])->name('image.status');
+    Route::get('speech-to-text', [SpeechToTextController::class, 'index'])->name('speech-to-text');
+    Route::post('speech-to-text', [SpeechToTextController::class, 'transcribe'])->name('speech-to-text.transcribe');
 });
 
 // Chat Resource Routes
