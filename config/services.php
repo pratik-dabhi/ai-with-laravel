@@ -43,4 +43,8 @@ return [
         'key' => env('DEEPGRAM_API_KEY'),
     ],
 
+    'speechify' => [
+        'key' => env('SPEECHIFY_API_KEY'),
+    ],
+
 ];
