@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Prism\Prism\Facades\Prism;
-use Prism\Prism\Enums\Provider;
+use App\Services\AI\AiService;
 use Symfony\Component\HttpFoundation\Response;
 
 class TextGenerationController extends Controller
 {
-    protected Provider $provider = Provider::Ollama;
-    protected string $model = 'mistral'; 
+    public function __construct(
+        protected AiService $ai
+    ) {}
 
     public function text(Request $request): Response
     {
@@ -18,11 +18,7 @@ class TextGenerationController extends Controller
             'prompt' => 'required|string'
         ]);
 
-        $response = Prism::text()
-            ->using($this->provider, $this->model)
-            ->withPrompt($request->prompt)
-            ->withClientOptions(['timeout' => 120])
-            ->asText();
+        $response = $this->ai->text()->generate($request->prompt);
 
         return response()->json([
             'content' => $response->text,
@@ -35,13 +31,6 @@ class TextGenerationController extends Controller
             'prompt' => 'required|string',
         ]);
 
-        return Prism::text()
-            ->using($this->provider, $this->model)
-            ->withPrompt($request->prompt)
-            ->withClientOptions([
-                'timeout' => 0, 
-            ])
-            ->asEventStreamResponse();
+        return $this->ai->text()->stream($request->prompt);
     }
-
 }

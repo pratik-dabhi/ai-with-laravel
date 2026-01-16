@@ -3,31 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Services\AI\AiService;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class TextToSpeechController extends Controller
 {
+    public function __construct(
+        protected AiService $ai
+    ) {}
+
     public function index() 
     {
-        $apiKey = config('services.speechify.key');
-        
         try {
-             $response = Http::withOptions([
-                'force_ip_resolve' => 'v4',
-                'connect_timeout' => 10,
-                'timeout' => 30,
-                'verify' => false,
-            ])->withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json'
-            ])->get('https://api.sws.speechify.com/v1/voices');
-            
-            $voices = $response->json();
-            
+            $voices = $this->ai->speech()->getVoices();
             return view('text-to-speech.index', ['voices' => $voices]);
             
         } catch (\Exception $e) {
@@ -46,50 +34,17 @@ class TextToSpeechController extends Controller
 
             $text = $validated['text'];
             $voiceId = $validated['voice_id'] ?? 'oliver'; 
-            $apiKey = config('services.speechify.key');
+            
+            $audioUrl = $this->ai->speech()->speak($text, $voiceId);
 
-            if (empty($apiKey)) {
-                return response()->json(['error' => 'Speechify API key is not configured.'], 500);
-            }
-
-            $response = Http::withOptions([
-                'force_ip_resolve' => 'v4',
-                'connect_timeout' => 10,
-                'timeout' => 30,
-                'verify' => false, 
-            ])->withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json'
-            ])->post('https://api.sws.speechify.com/v1/audio/speech', [
-                "input" => $text,
-                "voice_id" => $voiceId,
-                'format' => 'mp3'
+            return response()->json([
+                'audio_url' => asset($audioUrl),
+                'message' => 'Audio generated successfully'
             ]);
-
-            \Log::info('$response', [$response]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                
-                if (isset($data['audio_data'])) {
-                    $audioBinary = base64_decode($data['audio_data']);
-                    $filename = 'speechify_' . time() . '_' . Str::random(10) . '.mp3';
-                    
-                    Storage::disk('public')->put($filename, $audioBinary);
-                    
-                    return response()->json([
-                        'audio_url' => asset('storage/' . $filename),
-                        'message' => 'Audio generated successfully'
-                    ]);
-                }
-            }
-
-            Log::error('Speechify API Error: ' . $response->body());
-            return response()->json(['error' => 'Failed to generate audio from external service.'], 500);
 
         } catch (\Exception $e) {
             Log::error('TextToSpeech Error: ' . $e->getMessage());
-            return response()->json(['error' => 'An unexpected error occurred.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

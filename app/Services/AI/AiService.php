@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Services\AI;
+
+class AiService
+{
+    public function text(): Contracts\TextGeneratorInterface
+    {
+        $driver = config('ai.text', 'prism');
+        
+        return match ($driver) {
+            'prism' => new Providers\PrismTextGenerator(),
+            default => throw new \Exception("Unknown text driver: {$driver}"),
+        };
+    }
+
+    public function image(): Contracts\ImageGeneratorInterface
+    {
+        $driver = config('ai.image', 'freepik');
+        
+        return match ($driver) {
+            'freepik' => new Providers\FreepikImageGenerator(),
+            default => throw new \Exception("Unknown image driver: {$driver}"),
+        };
+    }
+
+    public function transcriber(): Contracts\TranscriberInterface
+    {
+        $driver = config('ai.transcription', 'deepgram');
+        
+        return match ($driver) {
+            'deepgram' => new Providers\DeepgramTranscriber(),
+            default => throw new \Exception("Unknown transcription driver: {$driver}"),
+        };
+    }
+
+    public function speech(): Contracts\SpeechSynthesizerInterface
+    {
+        $driver = config('ai.speech', 'speechify');
+        
+        return match ($driver) {
+            'speechify' => new Providers\SpeechifySpeechSynthesizer(),
+            default => throw new \Exception("Unknown speech driver: {$driver}"),
+        };
+    }
+
+    public function generateText(string $prompt, array $options = [])
+    {
+        return $this->text()->generate($prompt, $options);
+    }
+
+    public function generateImage(string $prompt, array $options = [])
+    {
+        return $this->image()->generate($prompt, $options);
+    }
+
+    public function transcribe(\Illuminate\Http\UploadedFile $file)
+    {
+        return $this->transcriber()->transcribe($file);
+    }
+
+    public function speak(string $text, string $voiceId = 'oliver')
+    {
+        return $this->speech()->speak($text, $voiceId);
+    }
+}

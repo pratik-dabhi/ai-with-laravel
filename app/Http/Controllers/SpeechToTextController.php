@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Services\AI\AiService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 
 class SpeechToTextController extends Controller
 {
+    public function __construct(
+        protected AiService $ai
+    ) {}
+
     public function index()
     {
         return view('speech-to-text.index');
@@ -27,36 +31,7 @@ class SpeechToTextController extends Controller
         }
 
         try {
-            $audioPath = $request->file('audio')->getPathname();
-            $mimeType = $request->file('audio')->getMimeType();
-            $apiKey = config('services.deepgram.key');
-
-            if (!$apiKey) {
-                return response()->json([
-                    'error' => 'Deepgram API key is not configured.'
-                ], 500);
-            }
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Token ' . $apiKey,
-                'Content-Type' => $mimeType
-            ])->withBody(file_get_contents($audioPath), $mimeType)
-                ->post('https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true');
-
-            if ($response->failed()) {
-                return response()->json([
-                    'error' => 'Failed to connect to Deepgram API: ' . $response->body()
-                ], 502);
-            }
-
-            $data = $response->json();
-            $transcript = $data['results']['channels'][0]['alternatives'][0]['transcript'] ?? '';
-
-            if (empty($transcript)) {
-                return response()->json([
-                    'error' => 'Check your audio content; No speech could be detected.'
-                ], 422);
-            }
+            $transcript = $this->ai->transcriber()->transcribe($request->file('audio'));
 
             return response()->json([
                 'transcript' => $transcript
@@ -64,7 +39,7 @@ class SpeechToTextController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'An error occurred during transcription: ' . $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
