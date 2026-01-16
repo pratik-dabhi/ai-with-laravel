@@ -47,4 +47,8 @@ return [
         'key' => env('SPEECHIFY_API_KEY'),
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+    ],
+
 ];

@@ -5,6 +5,7 @@ use App\Http\Controllers\TextGenerationController;
 use App\Http\Controllers\ImageGenerationController;
 use App\Http\Controllers\SpeechToTextController;
 use App\Http\Controllers\TextToSpeechController;
+use App\Http\Controllers\VisionController;
 use Illuminate\Support\Facades\Route;
 
 // Home
@@ -25,6 +26,10 @@ Route::prefix('ai')->name('ai.')->group(function () {
     // Text to Speech
     Route::get('text-to-speech', [TextToSpeechController::class, 'index'])->name('text-to-speech');
     Route::post('text-to-speech/generate', [TextToSpeechController::class, 'speech'])->name('text-to-speech.generate');
+
+    // Vision (Image Understanding)
+    Route::get('vision', [VisionController::class, 'index'])->name('vision');
+    Route::post('vision/analyze', [VisionController::class, 'analyze'])->name('vision.analyze');
 });
 
 // Chat Resource Routes

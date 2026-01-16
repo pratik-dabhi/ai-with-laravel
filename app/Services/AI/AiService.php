@@ -44,6 +44,16 @@ class AiService
         };
     }
 
+    public function vision(): Contracts\VisionInterface
+    {
+        $driver = config('ai.vision', 'openai');
+        
+        return match ($driver) {
+            'openai' => new Providers\OpenAiVisionProvider(),
+            default => throw new \Exception("Unknown vision driver: {$driver}"),
+        };
+    }
+
     public function generateText(string $prompt, array $options = [])
     {
         return $this->text()->generate($prompt, $options);
@@ -62,5 +72,10 @@ class AiService
     public function speak(string $text, string $voiceId = 'oliver')
     {
         return $this->speech()->speak($text, $voiceId);
+    }
+
+    public function describeImage(\Illuminate\Http\UploadedFile $image)
+    {
+        return $this->vision()->describe($image);
     }
 }

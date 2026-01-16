@@ -20,4 +20,6 @@ return [
     'transcription' => env('AI_TRANSCRIPTION_DRIVER', 'deepgram'),
     
     'speech' => env('AI_SPEECH_DRIVER', 'speechify'),
+
+    'vision' => env('AI_VISION_DRIVER', 'openai'),
 ];
