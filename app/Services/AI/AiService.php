@@ -78,4 +78,32 @@ class AiService
     {
         return $this->vision()->describe($image);
     }
+
+    public function embedding(): Contracts\EmbeddingInterface
+    {
+        $driver = config('ai.embedding', 'openai');
+        
+        return match ($driver) {
+            'openai' => new Providers\OpenAiEmbeddingProvider(),
+            'ollama' => new Providers\OllamaEmbeddingProvider(),
+            default => throw new \Exception("Unknown embedding driver: {$driver}"),
+        };
+    }
+
+    public function vectorStore(): Contracts\VectorStoreInterface
+    {
+        $driver = config('ai.vector_store', 'pinecone');
+        
+        return match ($driver) {
+            'pinecone' => new Providers\PineconeVectorStoreProvider(),
+            'json' => new Providers\JsonVectorStoreProvider(),
+            default => throw new \Exception("Unknown vector store driver: {$driver}"),
+        };
+    }
+
+    public function search(string $query, int $limit = 5)
+    {
+        $vector = $this->embedding()->embed($query);
+        return $this->vectorStore()->search($vector, $limit);
+    }
 }

@@ -9,7 +9,7 @@ use App\Http\Controllers\VisionController;
 use Illuminate\Support\Facades\Route;
 
 // Home
-Route::get('/', fn() => view('welcome'))->name('home');
+Route::get('/', fn() => view('index'))->name('home');
 
 // AI Text Generation Routes
 Route::prefix('ai')->name('ai.')->group(function () {
@@ -30,6 +30,11 @@ Route::prefix('ai')->name('ai.')->group(function () {
     // Vision (Image Understanding)
     Route::get('vision', [VisionController::class, 'index'])->name('vision');
     Route::post('vision/analyze', [VisionController::class, 'analyze'])->name('vision.analyze');
+
+    // Vector Search
+    Route::get('vector-search', [App\Http\Controllers\VectorSearchController::class, 'index'])->name('vector.search');
+    Route::post('vector-search/store', [App\Http\Controllers\VectorSearchController::class, 'store'])->name('vector.store');
+    Route::post('vector-search/search', [App\Http\Controllers\VectorSearchController::class, 'search'])->name('vector.search.api');
 });
 
 // Chat Resource Routes

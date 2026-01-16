@@ -22,4 +22,8 @@ return [
     'speech' => env('AI_SPEECH_DRIVER', 'speechify'),
 
     'vision' => env('AI_VISION_DRIVER', 'openai'),
+
+    'embedding' => env('AI_EMBEDDING_DRIVER', 'ollama'),
+    
+    'vector_store' => env('AI_VECTOR_STORE_DRIVER', 'json'),
 ];

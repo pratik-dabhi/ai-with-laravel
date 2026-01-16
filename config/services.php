@@ -51,4 +51,9 @@ return [
         'key' => env('OPENAI_API_KEY'),
     ],
 
+    'pinecone' => [
+        'key' => env('PINECONE_API_KEY'),
+        'host' => env('PINECONE_HOST'),
+    ],
+
 ];

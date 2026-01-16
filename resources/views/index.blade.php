@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI Assistant</title>
+    <title>Laravel AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 </head>
@@ -18,11 +18,11 @@
             </div>
             
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent">
-                AI Assistant
+                Laravel AI
             </h1>
             
             <p class="text-lg text-gray-400 max-w-md mx-auto leading-relaxed">
-                Experience the power of local AI. Chat with Mistral via Ollama, stream responses, and explore possibilities.
+                A modular, multi-provider AI platform. Switch seamlessly between Ollama, OpenAI, Freepik, and more.
             </p>
         </div>
 
@@ -87,10 +87,22 @@
                 </div>
                 <p class="text-sm text-gray-400 text-left">Analyze images and get detailed descriptions.</p>
             </a>
+
+            <a href="{{ route('ai.vector.search') }}" class="group relative bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-indigo-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="bg-indigo-500/10 p-2 rounded-lg group-hover:bg-indigo-500/20 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-indigo-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-lg text-white">Vector Search</span>
+                </div>
+                <p class="text-sm text-gray-400 text-left">Semantic search over your knowledge base using embeddings.</p>
+            </a>
         </div>
         
         <div class="text-sm text-gray-600">
-            Powered by Laravel + Prism + Ollama
+            Powered by Laravel AI
         </div>
     </div>
 </body>
